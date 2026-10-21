@@ -78,6 +78,17 @@ Before opening a pull request, confirm:
 - [ ] `is_chronic` is set correctly — this drives a warning for long-term medicines
 - [ ] The JSON still parses (`python3 -m json.tool data/medicines.json`)
 
+# Contributing to JanDawai (Hacktoberfest) 🎃
+
+We welcome contributions to expand our offline medicine database!
+
+## How to submit a verified drug:
+1. Fork the repository.
+2. Open `data/medicines.json`.
+3. Add a new JSON object following our strict schema (`brand_name`, `generic_name`, `strength`, `branded_mrp`, and `janaushadhi_mrp`).
+4. **CRITICAL:** You MUST link an official PMBI product code or NPPA reference in your PR description. Unverified medical data will be rejected immediately to ensure patient safety.
+5. Submit your Pull Request.
+
 ### Where prices come from
 
 Prefer, in order:
