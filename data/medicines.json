@@ -360,6 +360,126 @@
     "is_chronic": false
   },
   {
+    "id": "JA-31",
+    "brand_name": "Atorva 10",
+    "common_typos": "atorva,atorvastatin,atorva10",
+    "generic_name": "Atorvastatin",
+    "strength": "10 mg",
+    "pack_size": "15 tablets",
+    "branded_mrp": 110.0,
+    "janaushadhi_mrp": 25.0,
+    "use_hi": "कोलेस्ट्रॉल नियंत्रण के लिए दवा",
+    "is_chronic": true
+  },
+  {
+    "id": "JA-32",
+    "brand_name": "Metformin 500",
+    "common_typos": "glyciphage,metformin,gluformin",
+    "generic_name": "Metformin Hydrochloride",
+    "strength": "500 mg",
+    "pack_size": "20 tablets",
+    "branded_mrp": 40.0,
+    "janaushadhi_mrp": 10.0,
+    "use_hi": "डायबिटीज और ब्लड शुगर कंट्रोल",
+    "is_chronic": true
+  },
+  {
+    "id": "JA-33",
+    "brand_name": "Ciplar 10",
+    "common_typos": "ciplar,propranolol,ciplar10",
+    "generic_name": "Propranolol",
+    "strength": "10 mg",
+    "pack_size": "15 tablets",
+    "branded_mrp": 25.0,
+    "janaushadhi_mrp": 5.0,
+    "use_hi": "घबराहट और ब्लड प्रेशर",
+    "is_chronic": true
+  },
+  {
+    "id": "JA-34",
+    "brand_name": "Pantosec 40",
+    "common_typos": "pantosec,pantoprazole,pantosec40",
+    "generic_name": "Pantoprazole",
+    "strength": "40 mg",
+    "pack_size": "15 tablets",
+    "branded_mrp": 95.0,
+    "janaushadhi_mrp": 16.0,
+    "use_hi": "गैस और एसिडिटी",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-35",
+    "brand_name": "Aciloc 150",
+    "common_typos": "aciloc,ranitidine,aciloc150",
+    "generic_name": "Ranitidine",
+    "strength": "150 mg",
+    "pack_size": "20 tablets",
+    "branded_mrp": 35.0,
+    "janaushadhi_mrp": 8.0,
+    "use_hi": "एसिडिटी और सीने में जलन",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-36",
+    "brand_name": "Cetzine",
+    "common_typos": "cetzine,cetirizine",
+    "generic_name": "Cetirizine Hydrochloride",
+    "strength": "10 mg",
+    "pack_size": "10 tablets",
+    "branded_mrp": 30.0,
+    "janaushadhi_mrp": 6.0,
+    "use_hi": "सर्दी, जुकाम और एलर्जी",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-37",
+    "brand_name": "Avil 25",
+    "common_typos": "avil,pheniramine,avil25",
+    "generic_name": "Pheniramine Maleate",
+    "strength": "25 mg",
+    "pack_size": "15 tablets",
+    "branded_mrp": 15.0,
+    "janaushadhi_mrp": 4.0,
+    "use_hi": "एलर्जी और रैशेज",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-38",
+    "brand_name": "Spasmonil",
+    "common_typos": "spasmonil,dicyclomine,mefenamic",
+    "generic_name": "Dicyclomine + Paracetamol",
+    "strength": "20 mg + 325 mg",
+    "pack_size": "10 tablets",
+    "branded_mrp": 45.0,
+    "janaushadhi_mrp": 12.0,
+    "use_hi": "पेट दर्द और ऐंठन",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-39",
+    "brand_name": "Meftal Spas",
+    "common_typos": "meftal spas,mefenamic dicyclomine",
+    "generic_name": "Mefenamic Acid + Dicyclomine",
+    "strength": "250 mg + 10 mg",
+    "pack_size": "10 tablets",
+    "branded_mrp": 50.0,
+    "janaushadhi_mrp": 14.0,
+    "use_hi": "पीरियड्स का दर्द और पेट की ऐंठन",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-40",
+    "brand_name": "Eno",
+    "common_typos": "eno,antacid salt",
+    "generic_name": "Sodium Bicarbonate + Citric Acid",
+    "strength": "Fast relief",
+    "pack_size": "5g sachet",
+    "branded_mrp": 8.0,
+    "janaushadhi_mrp": 3.0,
+    "use_hi": "तत्काल एसिडिटी से राहत",
+    "is_chronic": false
+  },
+  {
     "id": "JA-51",
     "brand_name": "Cepodem 200",
     "common_typos": "Cepodem, Cefpodoxime 200",
@@ -1104,6 +1224,18 @@
     "is_chronic": true
   },
   {
+    "id": "JA-113",
+    "brand_name": "Stamlo 5",
+    "common_typos": "Stamlo, Amlodipine 5",
+    "generic_name": "Amlodipine Besylate Tablets IP 5mg",
+    "strength": "5mg",
+    "pack_size": "15 Tablets",
+    "branded_mrp": 42.0,
+    "janaushadhi_mrp": 6.0,
+    "use_hi": "हाई ब्लड प्रेशर (BP)",
+    "is_chronic": true
+  },
+  {
     "id": "JA-114",
     "brand_name": "Roxid 150",
     "common_typos": "Roxid, Roxithromycin 150",
@@ -1185,6 +1317,66 @@
     "branded_mrp": 125.0,
     "janaushadhi_mrp": 30.0,
     "use_hi": "पेट और मांसपेशियों का तेज दर्द",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-121",
+    "brand_name": "Brufen 400",
+    "common_typos": "brufen,ibuprofen,brufen400",
+    "generic_name": "Ibuprofen",
+    "strength": "400 mg",
+    "pack_size": "15 tablets",
+    "branded_mrp": 30.0,
+    "janaushadhi_mrp": 8.0,
+    "use_hi": "दर्द और सूजन निवारक",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-122",
+    "brand_name": "Voveran SR 100",
+    "common_typos": "voveran,diclofenac,voveran100",
+    "generic_name": "Diclofenac Sodium",
+    "strength": "100 mg",
+    "pack_size": "10 tablets",
+    "branded_mrp": 48.0,
+    "janaushadhi_mrp": 12.0,
+    "use_hi": "गंभीर जोड़ों और शरीर का दर्द",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-123",
+    "brand_name": "Disprin",
+    "common_typos": "disprin,aspirin",
+    "generic_name": "Aspirin (Dispersible)",
+    "strength": "350 mg",
+    "pack_size": "10 tablets",
+    "branded_mrp": 12.0,
+    "janaushadhi_mrp": 4.0,
+    "use_hi": "सिरदर्द और माइग्रेन",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-124",
+    "brand_name": "Ascoril LS",
+    "common_typos": "ascoril,cough syrup,ascorills",
+    "generic_name": "Levosalbutamol + Ambroxol + Guaiphenesin",
+    "strength": "100 ml syrup",
+    "pack_size": "1 Bottle",
+    "branded_mrp": 125.0,
+    "janaushadhi_mrp": 38.0,
+    "use_hi": "बलगम वाली खांसी और छाती की जकड़न",
+    "is_chronic": false
+  },
+  {
+    "id": "JA-125",
+    "brand_name": "Benadryl",
+    "common_typos": "benadryl,cough syrup",
+    "generic_name": "Diphenhydramine + Ammonium Chloride",
+    "strength": "100 ml syrup",
+    "pack_size": "1 Bottle",
+    "branded_mrp": 140.0,
+    "janaushadhi_mrp": 42.0,
+    "use_hi": "सूखी खांसी और गले की खराश",
     "is_chronic": false
   }
 ]
