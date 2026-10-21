@@ -1,4 +1,4 @@
-/* JanDawai — MVP search UI + offline fuzzy engine. */
+/* JanDawai — MVP search UI + offline fuzzy engine + Phase 3 impact features. */
 
 (() => {
   'use strict';
@@ -34,6 +34,25 @@
       disambig: '{n} मिलते-जुलते नतीजे — अपनी ताकत (strength) और पैक साइज़ देखकर चुनें:',
       closeMatches: 'कोई verified नतीजा नहीं मिला',
       askDocCard: 'डॉक्टर या फार्मासिस्ट से सलाह लें।',
+      // Phase 3
+      slipButton: 'Chemist Slip Dikhaye',
+      speakButton: 'Bol Ke Suno',
+      saveButton: 'Parche Mein Jode',
+      savedButton: 'Parche Mein Jude',
+      yearlyLabel: 'Roz Khane Wali Dawai?',
+      yearlyHint: '12 mahine ka hisaab',
+      yearlyLine: '12 mahine mein bachat',
+      kulBachat: 'Kul Bachat:',
+      resetTotal: 'Kul bachat reset karein',
+      slipTitle: 'Chemist Slip Dikhaye',
+      slipSalt: 'Generic Salt Name',
+      slipStrength: 'Strength',
+      slipCode: 'Jan Aushadhi Code',
+      slipNote: 'Dawai lene se pehle Doctor ya Pharmacist se zaroor salah lein.',
+      whatsapp: 'Share on WhatsApp',
+      closeModal: 'Band karein',
+      speaking: 'Bol ke suna rahe hain…',
+      speakUnsupported: 'Is browser mein awaaz support nahi hai.',
     },
     en: {
       skipToResults: 'Skip to results',
@@ -63,6 +82,25 @@
       closeMatches: 'No verified match found',
       notFoundHint: 'Kisi bhi verified list ke dawai ke liye apne pharmacist se naam puchhein.',
       askDocCard: 'Ask your doctor or pharmacist before switching.',
+      // Phase 3
+      slipButton: 'Chemist Slip Dikhaye',
+      speakButton: 'Bol Ke Suno',
+      saveButton: 'Parche Mein Jode',
+      savedButton: 'Added to Wallet',
+      yearlyLabel: 'Roz Khane Wali Dawai?',
+      yearlyHint: '12-month view',
+      yearlyLine: 'Savings over 12 months',
+      kulBachat: 'Kul Bachat:',
+      resetTotal: 'Reset total savings',
+      slipTitle: 'Chemist Slip Dikhaye',
+      slipSalt: 'Generic Salt Name',
+      slipStrength: 'Strength',
+      slipCode: 'Jan Aushadhi Code',
+      slipNote: 'Ask your doctor or pharmacist before starting this medicine.',
+      whatsapp: 'Share on WhatsApp',
+      closeModal: 'Close',
+      speaking: 'Reading it out…',
+      speakUnsupported: 'Speech is not supported in this browser.',
     },
   };
 
@@ -81,6 +119,11 @@
   let lang = 'hi';
   let currentQuery = '';
 
+  // Wallet of "saved" savings. Keyed by medicine id, survives re-renders.
+  const wallet = new Map(); // id -> { savings, yearly, added }
+
+  let lastFocus = null;
+
   const els = {
     q: document.getElementById('q'),
     clear: document.getElementById('clear'),
@@ -91,6 +134,18 @@
     offlineBadge: document.getElementById('offlineBadge'),
     disclaimerText: document.getElementById('disclaimerText'),
     langButtons: document.querySelectorAll('.lang-switch button'),
+    savingsFooter: document.getElementById('savingsFooter'),
+    savingsTotal: document.getElementById('savingsTotal'),
+    savingsLabel: document.getElementById('savingsLabel'),
+    savingsReset: document.getElementById('savingsReset'),
+    savingsResetLabel: document.getElementById('savingsResetLabel'),
+    slipModal: document.getElementById('slipModal'),
+    slipTitle: document.getElementById('slipTitle'),
+    slipClose: document.getElementById('slipClose'),
+    slipCloseLabel: document.getElementById('slipCloseLabel'),
+    slipBody: document.getElementById('slipBody'),
+    slipWhatsapp: document.getElementById('slipWhatsapp'),
+    slipWhatsappLabel: document.getElementById('slipWhatsappLabel'),
   };
 
   /* ---------- i18n ---------- */
@@ -110,11 +165,9 @@
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
       el.placeholder = t(el.dataset.i18nPlaceholder || el.dataset.i18n);
     });
-    if (els.q.value) {
-      // keep placeholder meaningful
-    }
     renderChips();
     renderDisclaimer();
+    renderFooter();
     renderResults(currentQuery, search(currentQuery));
   }
 
@@ -304,7 +357,7 @@
     renderResults(currentQuery, search(currentQuery));
   }
 
-  /* ---------- rendering ---------- */
+  /* ---------- helpers ---------- */
 
   function escapeHtml(s) {
     const div = document.createElement('div');
@@ -313,13 +366,153 @@
   }
 
   function money(n) {
-    return '₹' + String(n);
+    return '₹' + Number(n).toLocaleString('en-IN');
   }
 
   function savingsPct(branded, ja) {
     if (!branded) return 0;
     return Math.round(((branded - ja) / branded) * 100);
   }
+
+  /* ---------- savings wallet ("Parche Mein Jode") ---------- */
+
+  function walletEntry(med) {
+    let entry = wallet.get(med.id);
+    if (!entry) {
+      entry = { savings: med.branded_mrp - med.janaushadhi_mrp, yearly: false, added: false };
+      wallet.set(med.id, entry);
+    }
+    return entry;
+  }
+
+  // What the user banks: 12 months' worth when the daily-medicine checkbox is
+  // ticked, otherwise a single course.
+  function effectiveSavings(med) {
+    const entry = walletEntry(med);
+    return entry.savings * (entry.yearly ? 12 : 1);
+  }
+
+  function totalSavings() {
+    let sum = 0;
+    for (const entry of wallet.values()) {
+      if (entry.added) sum += entry.savings * (entry.yearly ? 12 : 1);
+    }
+    return sum;
+  }
+
+  function renderFooter() {
+    if (!els.savingsFooter) return;
+    const total = totalSavings();
+    els.savingsLabel.textContent = t('kulBachat');
+    els.savingsTotal.textContent = money(total);
+    els.savingsFooter.hidden = total <= 0;
+    if (els.savingsResetLabel) els.savingsResetLabel.textContent = t('resetTotal');
+  }
+
+  function toggleWallet(med, btn) {
+    const entry = walletEntry(med);
+    entry.added = !entry.added;
+    renderFooter();
+    if (btn) {
+      btn.classList.toggle('is-added', entry.added);
+      btn.textContent = entry.added ? t('savedButton') : t('saveButton');
+    }
+  }
+
+  function resetWallet() {
+    wallet.clear();
+    renderFooter();
+    // Cards keep their own toggle state, so re-render to reset the labels.
+    renderResults(currentQuery, search(currentQuery));
+  }
+
+  /* ---------- Chemist Slip modal ---------- */
+
+  function buildSlip(med) {
+    const code = med.id || '—';
+    els.slipBody.innerHTML = `
+      <div class="slip-row">
+        <span class="slip-label">${escapeHtml(t('slipSalt'))}</span>
+        <span class="slip-value">${escapeHtml(med.generic_name)}</span>
+      </div>
+      <div class="slip-row">
+        <span class="slip-label">${escapeHtml(t('slipStrength'))}</span>
+        <span class="slip-value">${escapeHtml(med.strength)}</span>
+      </div>
+      <div class="slip-row">
+        <span class="slip-label">${escapeHtml(t('slipCode'))}</span>
+        <span class="slip-value code">${escapeHtml(code)}</span>
+      </div>
+      <p class="slip-note">${escapeHtml(t('slipNote'))}</p>
+    `;
+
+    const text = [
+      'Jan Aushadhi Chemist Slip',
+      `${t('slipSalt')}: ${med.generic_name}`,
+      `${t('slipStrength')}: ${med.strength}`,
+      `${t('slipCode')}: ${code}`,
+    ].join('\n');
+
+    els.slipWhatsapp.href = 'https://wa.me/?text=' + encodeURIComponent(text);
+  }
+
+  function openSlip(med) {
+    lastFocus = document.activeElement;
+    buildSlip(med);
+    els.slipTitle.textContent = t('slipTitle');
+    els.slipCloseLabel.textContent = t('closeModal');
+    els.slipWhatsappLabel.textContent = t('whatsapp');
+    els.slipModal.hidden = false;
+    document.body.classList.add('modal-open');
+    els.slipClose.focus();
+  }
+
+  function closeSlip() {
+    els.slipModal.hidden = true;
+    document.body.classList.remove('modal-open');
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+    lastFocus = null;
+  }
+
+  /* ---------- Bol Ke Suno (speech) ---------- */
+
+  function hindiVoice() {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices() || [];
+    return (
+      voices.find((v) => v.lang === 'hi-IN') ||
+      voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('hi')) ||
+      null
+    );
+  }
+
+  function speak(med, noteEl) {
+    if (!('speechSynthesis' in window)) {
+      noteEl.hidden = false;
+      noteEl.textContent = t('speakUnsupported');
+      return;
+    }
+    const amount = effectiveSavings(med);
+    const text = `Iska generic salt ${med.generic_name} hai, aur aapki bachat ${amount} rupaye hai.`;
+
+    window.speechSynthesis.cancel();
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'hi-IN';
+    const voice = hindiVoice();
+    if (voice) utter.voice = voice;
+    utter.rate = 0.95;
+    utter.pitch = 1;
+
+    noteEl.hidden = false;
+    noteEl.textContent = t('speaking');
+    utter.onend = () => { noteEl.textContent = ''; };
+    utter.onerror = () => { noteEl.textContent = ''; };
+
+    window.speechSynthesis.speak(utter);
+  }
+
+  /* ---------- rendering ---------- */
 
   function promptEl() {
     const p = document.createElement('p');
@@ -348,6 +541,7 @@
     const savings = med.branded_mrp - med.janaushadhi_mrp;
     const pct = savingsPct(med.branded_mrp, med.janaushadhi_mrp);
     const useLabel = t('headerUse');
+    const entry = walletEntry(med);
 
     article.innerHTML = `
       <div class="card-head">
@@ -364,6 +558,14 @@
       <p class="savings-sub">
         ${t('bachat')} <strong>${money(savings)}</strong> (${pct}%)
       </p>
+      <p class="yearly" hidden>
+        ${escapeHtml(t('yearlyLine'))}: <strong>${money(savings * 12)}</strong>
+      </p>
+      <label class="yearly-check">
+        <input type="checkbox" class="yearly-toggle"${entry.yearly ? ' checked' : ''}>
+        <span>${escapeHtml(t('yearlyLabel'))}</span>
+        <span class="yearly-hint">${escapeHtml(t('yearlyHint'))}</span>
+      </label>
       <div class="card-body">
         <div class="field">
           <span class="field-label">${t('headerGeneric')}</span>
@@ -378,8 +580,51 @@
           <span class="field-value" lang="hi">${escapeHtml(med.use_hi)}</span>
         </div>
         <p class="ask-doc">${t('askDocCard')}</p>
+        <div class="card-actions">
+          <button type="button" class="btn btn-slip" data-action="slip">
+            <span aria-hidden="true">📝</span>
+            <span>${escapeHtml(t('slipButton'))}</span>
+          </button>
+          <button type="button" class="btn btn-speak" data-action="speak">
+            <span aria-hidden="true">🔊</span>
+            <span>${escapeHtml(t('speakButton'))}</span>
+          </button>
+          <button type="button" class="btn btn-save${entry.added ? ' is-added' : ''}" data-action="save">
+            <span aria-hidden="true">🧾</span>
+            <span>${escapeHtml(entry.added ? t('savedButton') : t('saveButton'))}</span>
+          </button>
+        </div>
+        <p class="speak-note" role="status" aria-live="polite" hidden></p>
       </div>
     `;
+
+    const yearlyStrip = article.querySelector('.yearly');
+    const yearlyToggle = article.querySelector('.yearly-toggle');
+    const noteEl = article.querySelector('.speak-note');
+
+    if (entry.yearly) yearlyStrip.hidden = false;
+
+    yearlyToggle.addEventListener('click', (e) => e.stopPropagation());
+    yearlyToggle.addEventListener('change', (e) => {
+      e.stopPropagation();
+      entry.yearly = yearlyToggle.checked;
+      yearlyStrip.hidden = !entry.yearly;
+      renderFooter();
+    });
+
+    article.querySelectorAll('.card-actions .btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const action = btn.dataset.action;
+        if (action === 'slip') {
+          openSlip(med);
+        } else if (action === 'speak') {
+          speak(med, noteEl);
+        } else if (action === 'save') {
+          toggleWallet(med, btn);
+        }
+      });
+    });
 
     article.addEventListener('click', () => {
       els.q.value = med.brand_name;
@@ -474,6 +719,24 @@
       });
     });
 
+    if (els.savingsReset) {
+      els.savingsReset.addEventListener('click', resetWallet);
+    }
+
+    if (els.slipClose) {
+      els.slipClose.addEventListener('click', closeSlip);
+    }
+
+    if (els.slipModal) {
+      els.slipModal.addEventListener('click', (e) => {
+        if (e.target === els.slipModal) closeSlip();
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && els.slipModal && !els.slipModal.hidden) closeSlip();
+    });
+
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
@@ -484,6 +747,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     renderDisclaimer();
     renderChips();
+    renderFooter();
     wireEvents();
     loadMedicines();
   });

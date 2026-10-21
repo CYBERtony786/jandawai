@@ -63,10 +63,44 @@
   </footer>
 </main>
 
-<aside class="disclaimer" role="note">
-  <span class="disclaimer-icon" aria-hidden="true">!</span>
-  <p id="disclaimerText"></p>
-</aside>
+<!-- Sticky bottom dock: running savings total + the standing disclaimer. -->
+<div class="bottom-dock" id="bottomDock">
+
+  <div class="savings-footer" id="savingsFooter" hidden aria-live="polite">
+    <span class="savings-footer-label" id="savingsLabel">Kul Bachat:</span>
+    <span class="savings-footer-total" id="savingsTotal">₹0</span>
+    <button type="button" class="savings-footer-reset" id="savingsReset">
+      <span aria-hidden="true">✕</span>
+      <span class="sr-only" id="savingsResetLabel">Reset</span>
+    </button>
+  </div>
+
+  <aside class="disclaimer" role="note">
+    <span class="disclaimer-icon" aria-hidden="true">!</span>
+    <p id="disclaimerText"></p>
+  </aside>
+
+</div>
+
+<!-- Chemist Slip modal: generic salt + strength + Jan Aushadhi code only. -->
+<div class="slip-modal" id="slipModal" hidden>
+  <div class="slip-sheet" role="dialog" aria-modal="true" aria-labelledby="slipTitle">
+    <div class="slip-head">
+      <h2 class="slip-title" id="slipTitle">Chemist Slip</h2>
+      <button type="button" class="slip-close" id="slipClose">
+        <span aria-hidden="true">✕</span>
+        <span class="sr-only" id="slipCloseLabel">Band karein</span>
+      </button>
+    </div>
+    <div class="slip-body" id="slipBody"></div>
+    <div class="slip-actions">
+      <a class="btn btn-whatsapp" id="slipWhatsapp" href="#" target="_blank" rel="noopener">
+        <span aria-hidden="true">💬</span>
+        <span id="slipWhatsappLabel">Share on WhatsApp</span>
+      </a>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

@@ -13,6 +13,8 @@
   --yellow: #ffd400;
   --yellow-ink: #3d2d00;
   --danger: #b3261e;
+  --whatsapp: #25d366;
+  --whatsapp-ink: #053b1a;
   --radius: 14px;
   --tap: 48px;
   --shadow: 0 2px 10px rgba(4, 102, 58, 0.13);
@@ -30,8 +32,10 @@ body {
   background: var(--paper-alt);
   font-size: 16px;
   line-height: 1.45;
-  padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(190px + env(safe-area-inset-bottom, 0px));
 }
+
+body.modal-open { overflow: hidden; }
 
 .sr-only {
   position: absolute;
@@ -340,6 +344,47 @@ body {
   color: var(--saffron-ink);
 }
 
+/* "Roz Khane Wali Dawai?" — 12-month projection strip. */
+.yearly {
+  margin: 0;
+  padding: 10px 16px;
+  background: var(--yellow);
+  color: var(--yellow-ink);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+}
+.yearly strong { font-size: 18px; }
+
+.yearly-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  min-height: var(--tap);
+}
+.yearly-check input {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  margin: 0;
+  accent-color: var(--green-700);
+}
+.yearly-check .yearly-hint {
+  margin-left: auto;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
 .card-body { padding: 4px 16px 14px; }
 
 .field {
@@ -414,6 +459,51 @@ body {
   border: 1px solid var(--green-600);
 }
 
+/* ---------- Card action buttons ---------- */
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: var(--tap);
+  padding: 10px 14px;
+  border: 2px solid var(--green-700);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--green-700);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:active { background: var(--green-50); }
+.btn[disabled] { opacity: 0.55; cursor: default; }
+
+.btn-slip {
+  background: var(--green-700);
+  color: #fff;
+}
+.btn-slip:active { background: var(--green-600); }
+
+.btn-speak { background: var(--yellow); border-color: var(--saffron); color: var(--yellow-ink); }
+.btn-speak:active { background: #f0c400; }
+
+.btn-save { background: var(--green-50); }
+.btn-save.is-added { background: var(--green-700); color: #fff; border-color: var(--green-700); }
+
 /* ---------- Footer meta ---------- */
 
 .meta {
@@ -433,12 +523,55 @@ body {
 }
 .pill-offline { background: var(--yellow); color: var(--yellow-ink); }
 
-/* ---------- Disclaimer banner ---------- */
+/* ---------- Bottom dock: Kul Bachat + disclaimer ---------- */
 
-.disclaimer {
+.bottom-dock {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   z-index: 30;
+  display: flex;
+  flex-direction: column;
+}
+
+.savings-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: var(--green-900);
+  color: #fff;
+  border-top: 3px solid var(--yellow);
+  box-shadow: 0 -3px 14px rgba(0, 0, 0, 0.22);
+}
+
+.savings-footer-label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.savings-footer-total {
+  margin-left: auto;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--yellow);
+  letter-spacing: -0.3px;
+}
+
+.savings-footer-reset {
+  flex: 0 0 34px;
+  width: 34px; height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+.savings-footer-reset:active { background: rgba(255, 255, 255, 0.32); }
+
+/* ---------- Disclaimer banner ---------- */
+
+.disclaimer {
   display: flex;
   align-items: flex-start;
   gap: 10px;
@@ -469,10 +602,128 @@ body {
 }
 
 @media (min-width: 720px) {
-  .disclaimer { left: auto; right: 16px; bottom: 16px; max-width: 460px; border-radius: 12px; border: 2px solid var(--saffron); }
+  .bottom-dock {
+    left: auto;
+    right: 16px;
+    bottom: 16px;
+    width: min(460px, calc(100vw - 32px));
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .savings-footer { border-top: 0; }
+  .disclaimer { border: 2px solid var(--saffron); border-top: 3px solid var(--saffron); }
   body { padding-bottom: 40px; }
 }
 
+/* ---------- Chemist Slip modal ---------- */
+
+.slip-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(2, 51, 29, 0.62);
+}
+.slip-modal[hidden] { display: none; }
+
+.slip-sheet {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 460px;
+  max-height: 100%;
+  overflow-y: auto;
+  background: var(--paper);
+  border-radius: var(--radius);
+  border: 2px solid var(--green-700);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.slip-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--green-700);
+  color: #fff;
+  border-radius: 12px 12px 0 0;
+}
+
+.slip-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.slip-close {
+  margin-left: auto;
+  flex: 0 0 40px;
+  width: 40px; height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 17px;
+  cursor: pointer;
+}
+.slip-close:active { background: rgba(255, 255, 255, 0.34); }
+
+.slip-body { padding: 6px 16px 4px; }
+
+.slip-row {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+.slip-row:last-child { border-bottom: 0; }
+
+.slip-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+
+.slip-value {
+  display: block;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--green-900);
+  word-break: break-word;
+}
+
+.slip-value.code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 1px;
+}
+
+.slip-note {
+  margin: 0 0 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.slip-actions {
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+}
+
+.btn-whatsapp {
+  width: 100%;
+  background: var(--whatsapp);
+  border-color: var(--whatsapp-ink);
+  color: var(--whatsapp-ink);
+}
+.btn-whatsapp:active { background: #1fbb59; }
+
 @media (prefers-reduced-motion: no-preference) {
-  .chip, .clear-btn, .lang-switch button { transition: background-color 0.12s ease, border-color 0.12s ease; }
+  .chip, .clear-btn, .lang-switch button, .btn, .savings-footer-reset, .slip-close {
+    transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+  }
 }
