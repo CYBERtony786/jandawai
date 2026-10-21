@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04663a">
+<meta name="description" content="JanDawai — apni branded dawai ka Jan Aushadhi generic equivalent, price aur bachat turant dekhein.">
+<title>JanDawai · जन दवाई</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2304663a'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23fff' font-family='sans-serif'%3E%E0%A4%9C%3C/text%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+
+<a class="skip-link" href="#results" data-i18n="skipToResults">Results par jayen</a>
+
+<header class="app-bar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">ज</span>
+    <span class="brand-text">
+      <strong>JanDawai</strong>
+      <small data-i18n="tagline">जन औषधि की सस्ती दवाई, आपकी जेब में</small>
+    </span>
+  </div>
+  <div class="lang-switch" role="group" aria-label="Language / भाषा">
+    <button type="button" data-lang="hi" aria-pressed="true">हिंदी</button>
+    <button type="button" data-lang="en" aria-pressed="false">English</button>
+  </div>
+</header>
+
+<main class="shell">
+
+  <div class="searchbar">
+    <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="11" cy="11" r="7"></circle>
+      <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+    </svg>
+    <label class="sr-only" for="q" data-i18n="searchLabel">दवाई का नाम खोजें</label>
+    <input id="q" type="search" autocomplete="off" autocapitalize="off" autocorrect="off"
+           spellcheck="false" enterkeyhint="search"
+           data-i18n-placeholder="searchPlaceholder"
+           placeholder="दवाई का नाम लिखें — जैसे &quot;Dolo 650&quot;">
+    <button type="button" id="clear" class="clear-btn" hidden>
+      <span aria-hidden="true">✕</span>
+      <span class="sr-only" data-i18n="clear">साफ़ करें</span>
+    </button>
+  </div>
+
+  <section class="quickpicks" aria-labelledby="qp-heading">
+    <h2 id="qp-heading" class="section-title" data-i18n="quickPicks">एक टैप में देखें</h2>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <section id="results" class="results" aria-live="polite" aria-atomic="false"></section>
+
+  <footer class="meta">
+    <span class="pill" id="engineBadge"></span>
+    <span class="pill" id="countBadge"></span>
+    <span class="pill pill-offline" id="offlineBadge" hidden data-i18n="offlineReady">ऑफ़लाइन भी चलेगा</span>
+  </footer>
+</main>
+
+<aside class="disclaimer" role="note">
+  <span class="disclaimer-icon" aria-hidden="true">!</span>
+  <p id="disclaimerText"></p>
+</aside>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "JanDawai — Jan Aushadhi Medicine Finder",
+  "short_name": "JanDawai",
+  "description": "Type a branded medicine name and see the Jan Aushadhi generic equivalent, price and savings — offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7f5",
+  "theme_color": "#04663a",
+  "lang": "hi",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
